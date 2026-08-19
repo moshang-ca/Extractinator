@@ -8,9 +8,9 @@ plugins {
     java
     id("maven-publish")
     id("com.teamresourceful.resourcefulgradle") version "0.0.+"
-    id("dev.architectury.loom") version "1.4-SNAPSHOT" apply false
-    id("architectury-plugin") version "3.4-SNAPSHOT"
-    id("com.github.johnrengelman.shadow") version "7.1.2" apply false
+    id("dev.architectury.loom") version "1.17.491" apply false
+    id("architectury-plugin") version "3.5-SNAPSHOT"
+    id("com.gradleup.shadow") version "8.3.8" apply false
 }
 
 architectury {
@@ -24,6 +24,7 @@ subprojects {
     apply(plugin = "architectury-plugin")
 
     val minecraftVersion: String by project
+    val resourcefulLibMCVersion: String by project
     val modLoader = project.name
     val modId = rootProject.name
     val isCommon = modLoader == rootProject.projects.common.name
@@ -37,9 +38,10 @@ subprojects {
     }
 
     repositories {
+        maven(url = "https://maven.parchmentmc.org/")
         maven(url = "https://maven.architectury.dev/")
-        maven(url = "https://maven.minecraftforge.net/")
         maven(url = "https://maven.resourcefulbees.com/repository/maven-public/")
+        maven(url = "https://neoforged.forgecdn.net/releases/")
     }
 
     dependencies {
@@ -56,15 +58,15 @@ subprojects {
 
             officialMojangMappings()
 
-            parchment(create(group = "org.parchmentmc.data", name = "parchment-$minecraftVersion", version = parchmentVersion))
+            parchment(create("org.parchmentmc.data:parchment-$minecraftVersion:$parchmentVersion"))
         })
 
-        compileOnly(group = "com.teamresourceful", name = "yabn", version = "1.0.3")
-        "modApi"(group = "com.teamresourceful.resourcefullib", name = "resourcefullib-$modLoader-$minecraftVersion", version = resourcefulLibVersion)
-        "modApi"(group = "com.teamresourceful.resourcefulconfig", name = "resourcefulconfig-$modLoader-$minecraftVersion", version = resourcefulConfigVersion)
+        compileOnly("com.teamresourceful:yabn:1.0.3")
+        "modApi"("com.teamresourceful.resourcefullib:resourcefullib-$modLoader-$resourcefulLibMCVersion:$resourcefulLibVersion")
+        "modApi"("com.teamresourceful.resourcefulconfig:resourcefulconfig-$modLoader-$resourcefulLibMCVersion:$resourcefulConfigVersion")
         if (isCommon) {
-            "modApi"(group = "mezz.jei", name = "jei-$minecraftVersion-common-api", version = jeiVersion)
-            "modCompileOnly"(group = "me.shedaniel", name = "RoughlyEnoughItems-api", version = reiVersion)
+            "modApi"("mezz.jei:jei-$minecraftVersion-common-api:$jeiVersion")
+            "modCompileOnly"("me.shedaniel:RoughlyEnoughItems-api:$reiVersion")
         }
     }
 
@@ -80,15 +82,22 @@ subprojects {
         archiveClassifier.set(null as String?)
     }
 
+//    tasks.processResources {
+//        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//        filesMatching(listOf("META-INF/mods.toml", "fabric.mod.json")) {
+//            expand("version" to project.version)
+//        }
+//    }
+
     tasks.processResources {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        filesMatching(listOf("META-INF/mods.toml", "fabric.mod.json")) {
+        filesMatching(listOf("META-INF/neoforge.mods.toml")) {
             expand("version" to project.version)
         }
     }
 
     if (!isCommon) {
-        apply(plugin = "com.github.johnrengelman.shadow")
+        apply(plugin = "com.gradleup.shadow")
         configure<ArchitectPluginExtension> {
             platformSetupLoomIde()
         }

@@ -143,7 +143,7 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
     public boolean isValidInput(ItemStack stack) {
         if (stack.isEmpty()) return false;
         if (!ItemStack.isSameItem(this.prevInput, stack)) {
-            this.recipe = level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.EXTRACTINATOR_RECIPE.get()).stream().filter(r -> r.matches(stack)).findFirst().orElse(null);
+            this.recipe = level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.EXTRACTINATOR_RECIPE.get()).stream().filter(holder -> holder.value().matches(stack)).findFirst().orElse(null);
         }
         this.prevInput = stack;
         return ModUtils.isValidInput(this.recipe, stack);

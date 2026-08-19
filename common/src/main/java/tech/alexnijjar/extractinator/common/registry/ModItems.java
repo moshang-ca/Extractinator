@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public class ModItems {
     public static final ResourcefulRegistry<Item> ITEMS = ResourcefulRegistries.create(BuiltInRegistries.ITEM, Extractinator.MOD_ID);
-    public static final Supplier<CreativeModeTab> TAB = new ResourcefulCreativeTab(new ResourceLocation(Extractinator.MOD_ID, "main"))
+    public static final Supplier<CreativeModeTab> TAB = new ResourcefulCreativeTab(ResourceLocation.fromNamespaceAndPath(Extractinator.MOD_ID, "main"))
         .setItemIcon(ModBlocks.EXTRACTINATOR)
         .addRegistry(ITEMS)
         .build();

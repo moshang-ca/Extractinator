@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "tech.alexnijjar.extractinator.mixin.forge",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8.5",
+  "client": [
+    "ExtractinatorBlockItemMixin"
+  ],
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,20 +1,24 @@
 package tech.alexnijjar.extractinator.common.recipe;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.teamresourceful.resourcefullib.common.codecs.recipes.IngredientCodec;
 import com.teamresourceful.resourcefullib.common.codecs.tags.HolderSetCodec;
 import com.teamresourceful.resourcefullib.common.recipe.CodecRecipe;
+import com.teamresourceful.resourcefullib.common.recipe.CodecRecipeSerializer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import tech.alexnijjar.extractinator.common.registry.ModRecipeSerializers;
@@ -22,32 +26,25 @@ import tech.alexnijjar.extractinator.common.registry.ModRecipeTypes;
 
 import java.util.List;
 
-public record ExtractinatorRecipe(ResourceLocation id, Ingredient input,
-                                  List<Drop> outputs) implements CodecRecipe<Container> {
+public record ExtractinatorRecipe(Ingredient input,
+                                  List<Drop> outputs) implements CodecRecipe<SingleRecipeInput> {
 
-    public static Codec<ExtractinatorRecipe> codec(ResourceLocation id) {
-        return RecordCodecBuilder.create(instance -> instance.group(
-            RecordCodecBuilder.point(id),
-            IngredientCodec.CODEC.fieldOf("input").forGetter(ExtractinatorRecipe::input),
+    public static MapCodec<ExtractinatorRecipe> CODEC =
+        RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Ingredient.CODEC.fieldOf("input").forGetter(ExtractinatorRecipe::input),
             Drop.CODEC.listOf().fieldOf("drops").forGetter(ExtractinatorRecipe::outputs)
         ).apply(instance, ExtractinatorRecipe::new));
-    }
 
-    public static Codec<ExtractinatorRecipe> networkingCodec(ResourceLocation id) {
-        return RecordCodecBuilder.create(instance -> instance.group(
-            RecordCodecBuilder.point(id),
-            IngredientCodec.NETWORK_CODEC.fieldOf("input").forGetter(ExtractinatorRecipe::input),
-            Drop.CODEC.listOf().fieldOf("drops").forGetter(ExtractinatorRecipe::outputs)
-        ).apply(instance, ExtractinatorRecipe::new));
-    }
+    public static StreamCodec<RegistryFriendlyByteBuf, ExtractinatorRecipe> STREAM_CODEC =
+        StreamCodec.composite(
+            Ingredient.CONTENTS_STREAM_CODEC, ExtractinatorRecipe::input,
+            Drop.STREAM_CODEC.apply(ByteBufCodecs.list()), ExtractinatorRecipe::outputs,
+            ExtractinatorRecipe::new
+        );
 
     @Override
-    public boolean matches(Container container, Level level) {
+    public boolean matches(SingleRecipeInput input, Level level) {
         return false;
-    }
-
-    public boolean matches(ItemStack stack) {
-        return this.input.test(stack);
     }
 
     @Override
@@ -56,13 +53,14 @@ public record ExtractinatorRecipe(ResourceLocation id, Ingredient input,
     }
 
     @Override
-    public @NotNull ResourceLocation id() {
-        return this.id;
-    }
-
-    @Override
     public @NotNull RecipeSerializer<?> getSerializer() {
         return ModRecipeSerializers.EXTRACTINATOR_SERIALIZER.get();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public CodecRecipeSerializer<? extends CodecRecipe<SingleRecipeInput>> serializer() {
+        return (CodecRecipeSerializer<? extends CodecRecipe<SingleRecipeInput>>) getSerializer();
     }
 
     @Override
@@ -87,5 +85,14 @@ public record ExtractinatorRecipe(ResourceLocation id, Ingredient input,
             Codec.INT.fieldOf("min_drop_count").orElse(1).forGetter(Drop::minDropCount),
             Codec.INT.fieldOf("max_drop_count").orElse(1).forGetter(Drop::maxDropCount)
         ).apply(instance, Drop::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, Drop> STREAM_CODEC =
+            StreamCodec.composite(
+                ByteBufCodecs.holderSet(BuiltInRegistries.ITEM.key()), Drop::drops,
+                ByteBufCodecs.DOUBLE, Drop::dropChance,
+                ByteBufCodecs.INT, Drop::minDropCount,
+                ByteBufCodecs.INT, Drop::maxDropCount,
+                Drop::new
+            );
     }
 }

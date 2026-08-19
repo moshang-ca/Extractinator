@@ -13,7 +13,7 @@ import tech.alexnijjar.extractinator.common.registry.ModRecipeTypes;
 
 public class ExtractinatorReiPlugin implements REIClientPlugin {
 
-    public static final CategoryIdentifier<ExtractinatorDisplay> CATEGORY = CategoryIdentifier.of(new ResourceLocation(Extractinator.MOD_ID, "extractinator"));
+    public static final CategoryIdentifier<ExtractinatorDisplay> CATEGORY = CategoryIdentifier.of(ResourceLocation.fromNamespaceAndPath(Extractinator.MOD_ID, "extractinator"));
 
     @Override
     public void registerCategories(CategoryRegistry registry) {
@@ -23,6 +23,6 @@ public class ExtractinatorReiPlugin implements REIClientPlugin {
 
     @Override
     public void registerDisplays(DisplayRegistry registry) {
-        registry.registerRecipeFiller(ExtractinatorRecipe.class, ModRecipeTypes.EXTRACTINATOR_RECIPE.get(), ExtractinatorDisplay::new);
+        registry.registerRecipeFiller(ExtractinatorRecipe.class, ModRecipeTypes.EXTRACTINATOR_RECIPE.get(), holder -> new ExtractinatorDisplay(holder.value()));
     }
 }
