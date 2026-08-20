@@ -8,7 +8,7 @@ import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import tech.alexnijjar.extractinator.client.ExtractinatorClient;
-import tech.alexnijjar.extractinator.common.config.neoforge.ForgeMenuConfig;
+import tech.alexnijjar.extractinator.common.config.forge.ForgeMenuConfig;
 
 import java.util.HashMap;
 import java.util.Map;
