@@ -18,7 +18,7 @@ import tech.alexnijjar.extractinator.common.registry.ModItems;
 import java.util.List;
 
 public class ExtractinatorCategory extends BaseCategory<ExtractinatorRecipe> {
-    public static final ResourceLocation ID = new ResourceLocation(Extractinator.MOD_ID, "extractinating");
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Extractinator.MOD_ID, "extractinating");
     public static final RecipeType<ExtractinatorRecipe> RECIPE = new RecipeType<>(ID, ExtractinatorRecipe.class);
     private final IDrawable slot;
 

@@ -12,7 +12,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -46,6 +45,8 @@ public record ExtractinatorRecipe(Ingredient input,
     public boolean matches(SingleRecipeInput input, Level level) {
         return false;
     }
+
+    public boolean matches(ItemStack stack, Level level) { return matches(new SingleRecipeInput(stack), level); }
 
     @Override
     public boolean canCraftInDimensions(int width, int height) {

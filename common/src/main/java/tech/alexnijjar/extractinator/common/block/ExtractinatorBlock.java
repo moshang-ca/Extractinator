@@ -1,11 +1,11 @@
 package tech.alexnijjar.extractinator.common.block;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.Container;
-import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -30,12 +31,14 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import tech.alexnijjar.extractinator.common.registry.ModDataComponents;
 import tech.alexnijjar.extractinator.common.registry.ModItems;
 
 import java.util.List;
 
-@SuppressWarnings("deprecation")
+@MethodsReturnNonnullByDefault
 public class ExtractinatorBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
+    public static final MapCodec<ExtractinatorBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(BlockBehaviour.propertiesCodec()).apply(instance, ExtractinatorBlock::new));
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -45,15 +48,16 @@ public class ExtractinatorBlock extends BaseEntityBlock implements SimpleWaterlo
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+                                              Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!level.isClientSide()) {
             if (level.getBlockEntity(pos) instanceof ExtractinatorBlockEntity extractinator) {
                 extractinator.addItemToInput(player.getItemInHand(hand));
                 extractinator.extractinate();
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
         }
-        return InteractionResult.CONSUME;
+        return ItemInteractionResult.CONSUME;
     }
 
     @Override
@@ -128,11 +132,16 @@ public class ExtractinatorBlock extends BaseEntityBlock implements SimpleWaterlo
     }
 
     @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
     public List<ItemStack> getDrops(BlockState blockState, LootParams.Builder builder) {
         BlockEntity blockEntity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         ItemStack stack = ModItems.EXTRACTINATOR.get().getDefaultInstance();
         if (blockEntity instanceof ExtractinatorBlockEntity entity) {
-            stack.getOrCreateTag().putInt("RemainingUsages", entity.remainingUsages);
+            stack.set(ModDataComponents.REMAIN_USAGES.get(), entity.remainingUsages);
         }
         return List.of(stack);
     }

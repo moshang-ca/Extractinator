@@ -1,26 +1,27 @@
-package tech.alexnijjar.extractinator.forge;
+package com.github.moshangca.extractinator.neoforge;
 
+import com.github.moshangca.extractinator.common.config.neoforge.NeoForgeMenuConfig;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.client.event.ModelEvent;
 import tech.alexnijjar.extractinator.client.ExtractinatorClient;
-import tech.alexnijjar.extractinator.common.config.neoforge.ForgeMenuConfig;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ExtractinatorClientForge {
+public class ExtractinatorClientNeoForge {
     private static final Map<Item, BlockEntityWithoutLevelRenderer> ITEM_RENDERERS = new HashMap<>();
     private static boolean hasInitializedRenderers = false;
 
-    public static void init() {
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(ExtractinatorClientForge::modelLoading);
-        ForgeMenuConfig.register();
+    public static void init(ModContainer mod) {
+        IEventBus bus = mod.getEventBus();
+        if (bus == null) return;
+        bus.addListener(ExtractinatorClientNeoForge::modelLoading);
+        NeoForgeMenuConfig.register(mod);
     }
 
     public static void modelLoading(ModelEvent.RegisterAdditional event) {

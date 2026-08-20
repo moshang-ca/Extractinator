@@ -1,6 +1,7 @@
 package tech.alexnijjar.extractinator.common.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
@@ -9,10 +10,12 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tech.alexnijjar.extractinator.common.config.ExtractinatorConfig;
 import tech.alexnijjar.extractinator.common.recipe.ExtractinatorRecipe;
@@ -35,7 +38,7 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
     }
 
     public void serverTick() {
-        if (level.getGameTime() % ExtractinatorConfig.extractTicks == 0) {
+        if (level != null && level.getGameTime() % ExtractinatorConfig.extractTicks == 0) {
             extractinate();
         }
     }
@@ -51,16 +54,18 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
     }
 
     protected void placeBlockAbove() {
+        if (level == null) return;
+
         BlockState above = level.getBlockState(this.getBlockPos().above());
-        ItemStack input = inventory.get(0);
-        Block toPlace = Block.byItem(input.getItem());
-        if (toPlace == Blocks.AIR) return;
+        ItemStack input = inventory.getFirst();
+        BlockState toPlaceState = Block.byItem(input.getItem()).defaultBlockState();
+        if (toPlaceState.isAir()) return;
 
         if (above.isAir() || Blocks.WATER.equals(above.getBlock())) {
-            level.setBlock(this.getBlockPos().above(), toPlace.defaultBlockState(), Block.UPDATE_NONE);
+            level.setBlock(this.getBlockPos().above(), toPlaceState, Block.UPDATE_NONE);
         } else {
             if (!ExtractinatorConfig.silent) {
-                level.playSound(null, this.getBlockPos(), toPlace.getSoundType(above).getBreakSound(), SoundSource.BLOCKS, 1.0f, 1.0f);
+                level.playSound(null, this.getBlockPos(), toPlaceState.getSoundType().getBreakSound(), SoundSource.BLOCKS, 1.0f, 1.0f);
             }
             List<ItemStack> outputs = ModUtils.extractItem(this.recipe, level);
             if (!outputs.isEmpty()) {
@@ -71,6 +76,8 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
     }
 
     protected void extractBlockAbove() {
+        if (level == null) return;
+
         BlockState above = level.getBlockState(this.getBlockPos().above());
         if (above.isAir()) return;
         extractStack(above.getBlock().asItem().getDefaultInstance());
@@ -83,7 +90,7 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
     }
 
     protected boolean extractStack(ItemStack stack) {
-        if (!isValidInput(stack)) return false;
+        if (level == null || !isValidInput(stack)) return false;
 
         if (ExtractinatorConfig.silent) {
             level.removeBlock(this.getBlockPos().above(), false);
@@ -97,6 +104,8 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
     }
 
     protected void dispenseItems() {
+        if (level == null) return;
+
         for (int i = 1; i < getInventory().size(); i++) {
             ItemStack stack = getItem(i);
             if (stack.isEmpty()) continue;
@@ -123,27 +132,31 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        ContainerHelper.saveAllItems(tag, this.inventory);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        ContainerHelper.saveAllItems(tag, this.inventory, registries);
         tag.putInt("RemainingUsages", remainingUsages);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        ContainerHelper.loadAllItems(tag, this.inventory);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        ContainerHelper.loadAllItems(tag, this.inventory, registries);
         this.remainingUsages = tag.getInt("RemainingUsages");
     }
 
     @Override
+    @NotNull
     public NonNullList<ItemStack> getInventory() {
         return this.inventory;
     }
 
     @Override
     public boolean isValidInput(ItemStack stack) {
-        if (stack.isEmpty()) return false;
+        if (level == null || stack.isEmpty()) return false;
         if (!ItemStack.isSameItem(this.prevInput, stack)) {
-            this.recipe = level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.EXTRACTINATOR_RECIPE.get()).stream().filter(holder -> holder.value().matches(stack)).findFirst().orElse(null);
+            RecipeHolder<ExtractinatorRecipe> holderResult = level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.EXTRACTINATOR_RECIPE.get()).stream().filter(holder -> holder.value().matches(stack, level)).findFirst().orElse(null);
+            this.recipe = holderResult != null ? holderResult.value() : null;
         }
         this.prevInput = stack;
         return ModUtils.isValidInput(this.recipe, stack);

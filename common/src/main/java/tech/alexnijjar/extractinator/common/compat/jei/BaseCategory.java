@@ -40,6 +40,7 @@ public abstract class BaseCategory<T> implements IRecipeCategory<T> {
     }
 
     @Override
+    @SuppressWarnings("removal")
     public @NotNull IDrawable getBackground() {
         return background;
     }

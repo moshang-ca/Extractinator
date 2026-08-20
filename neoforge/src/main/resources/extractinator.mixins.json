@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "tech.alexnijjar.extractinator.mixin.forge",
+  "package": "com.github.moshangca.extractinator.mixin.neoforge",
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8.5",
   "client": [
