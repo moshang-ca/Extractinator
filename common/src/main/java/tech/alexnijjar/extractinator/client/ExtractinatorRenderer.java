@@ -20,11 +20,11 @@ import tech.alexnijjar.extractinator.common.block.ExtractinatorBlockEntity;
 import tech.alexnijjar.extractinator.common.registry.ModBlocks;
 
 public class ExtractinatorRenderer implements BlockEntityRenderer<ExtractinatorBlockEntity> {
-    public static final ResourceLocation BASE = new ResourceLocation(Extractinator.MOD_ID, "block/extractinator/base");
-    public static final ResourceLocation PUMP = new ResourceLocation(Extractinator.MOD_ID, "block/extractinator/pump");
-    public static final ResourceLocation TORQUE_WHEEL = new ResourceLocation(Extractinator.MOD_ID, "block/extractinator/torque_wheel");
-    public static final ResourceLocation COGWHEEL = new ResourceLocation(Extractinator.MOD_ID, "block/extractinator/cogwheel");
-    public static final ResourceLocation CHIMNEY = new ResourceLocation(Extractinator.MOD_ID, "block/extractinator/chimney");
+    public static final ResourceLocation BASE = ResourceLocation.fromNamespaceAndPath(Extractinator.MOD_ID, "block/extractinator/base");
+    public static final ResourceLocation PUMP = ResourceLocation.fromNamespaceAndPath(Extractinator.MOD_ID, "block/extractinator/pump");
+    public static final ResourceLocation TORQUE_WHEEL = ResourceLocation.fromNamespaceAndPath(Extractinator.MOD_ID, "block/extractinator/torque_wheel");
+    public static final ResourceLocation COGWHEEL = ResourceLocation.fromNamespaceAndPath(Extractinator.MOD_ID, "block/extractinator/cogwheel");
+    public static final ResourceLocation CHIMNEY = ResourceLocation.fromNamespaceAndPath(Extractinator.MOD_ID, "block/extractinator/chimney");
 
     public ExtractinatorRenderer(BlockEntityRendererProvider.Context ctx) {
     }
@@ -125,7 +125,7 @@ public class ExtractinatorRenderer implements BlockEntityRenderer<ExtractinatorB
             Minecraft minecraft = Minecraft.getInstance();
             long time = minecraft.level == null ? 0 : minecraft.level.getGameTime();
             renderPump(time, poseStack, buffer, packedLight, packedOverlay);
-            renderCogwheel(time, minecraft.getDeltaFrameTime(), poseStack, buffer, packedLight, packedOverlay);
+            renderCogwheel(time, minecraft.getFrameTimeNs(), poseStack, buffer, packedLight, packedOverlay);
             renderChimney(time, poseStack, buffer, packedLight, packedOverlay);
         }
     }

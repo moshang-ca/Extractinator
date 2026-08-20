@@ -1,7 +1,6 @@
 package tech.alexnijjar.extractinator.common.block;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -10,6 +9,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import tech.alexnijjar.extractinator.common.config.ExtractinatorConfig;
+import tech.alexnijjar.extractinator.common.registry.ModDataComponents;
 
 public class ExtractinatorBlockItem extends BlockItem {
     public ExtractinatorBlockItem(Block block, Properties properties) {
@@ -20,12 +20,9 @@ public class ExtractinatorBlockItem extends BlockItem {
     protected boolean updateCustomBlockEntityTag(BlockPos pos, Level level, @Nullable Player player, ItemStack stack, BlockState state) {
         if (!level.isClientSide) {
             if (level.getBlockEntity(pos) instanceof ExtractinatorBlockEntity entity) {
-                CompoundTag tag = stack.getOrCreateTag();
-                if (tag.contains("RemainingUsages")) {
-                    entity.remainingUsages = tag.getInt("RemainingUsages");
-                } else {
+                entity.remainingUsages = stack.getOrDefault(ModDataComponents.REMAIN_USAGES.get(), -1);
+                if (entity.remainingUsages == -1)
                     entity.remainingUsages = ExtractinatorConfig.extractinatorDurability;
-                }
             }
         }
         return super.updateCustomBlockEntityTag(pos, level, player, stack, state);

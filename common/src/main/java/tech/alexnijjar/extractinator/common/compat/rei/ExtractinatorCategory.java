@@ -45,7 +45,7 @@ public class ExtractinatorCategory implements DisplayCategory<ExtractinatorDispl
     public List<Widget> setupDisplay(ExtractinatorDisplay display, Rectangle bounds) {
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(Widgets.createSlot(new Point(bounds.getMinX() + 69, bounds.getMinY() + 5)).entries(display.getInputEntries().get(0)).markInput());
+        widgets.add(Widgets.createSlot(new Point(bounds.getMinX() + 69, bounds.getMinY() + 5)).entries(display.getInputEntries().getFirst()).markInput());
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 7; j++) {

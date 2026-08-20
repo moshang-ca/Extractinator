@@ -49,7 +49,7 @@ public interface ExtractinatorContainer extends WorldlyContainer {
     private void moveItemToOccupiedSlotsWithSameType(ItemStack stack) {
         for (int i = 0; i < this.getInventory().size(); ++i) {
             ItemStack itemStack = this.getItem(i);
-            if (ItemStack.isSameItemSameTags(itemStack, stack)) {
+            if (ItemStack.isSameItemSameComponents(itemStack, stack)) {
                 this.moveItemsBetweenStacks(stack, itemStack);
                 if (stack.isEmpty()) {
                     return;

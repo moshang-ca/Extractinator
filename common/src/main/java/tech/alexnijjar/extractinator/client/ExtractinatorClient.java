@@ -4,7 +4,7 @@ import com.teamresourceful.resourcefullib.common.registry.RegistryEntry;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import tech.alexnijjar.extractinator.common.registry.ModBlockEntityTypes;
@@ -32,11 +32,11 @@ public class ExtractinatorClient {
         consumer.accept(ModBlockEntityTypes.EXTRACTINATOR, ExtractinatorRenderer::new);
     }
 
-    public static void onRegisterModels(Consumer<ResourceLocation> consumer) {
-        consumer.accept(ExtractinatorRenderer.BASE);
-        consumer.accept(ExtractinatorRenderer.PUMP);
-        consumer.accept(ExtractinatorRenderer.TORQUE_WHEEL);
-        consumer.accept(ExtractinatorRenderer.COGWHEEL);
-        consumer.accept(ExtractinatorRenderer.CHIMNEY);
+    public static void onRegisterModels(Consumer<ModelResourceLocation> consumer) {
+        consumer.accept(new ModelResourceLocation(ExtractinatorRenderer.BASE, "standalone"));
+        consumer.accept(new ModelResourceLocation(ExtractinatorRenderer.PUMP, "standalone"));
+        consumer.accept(new ModelResourceLocation(ExtractinatorRenderer.TORQUE_WHEEL, "standalone"));
+        consumer.accept(new ModelResourceLocation(ExtractinatorRenderer.COGWHEEL, "standalone"));
+        consumer.accept(new ModelResourceLocation(ExtractinatorRenderer.CHIMNEY, "standalone"));
     }
 }

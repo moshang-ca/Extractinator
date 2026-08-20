@@ -1,6 +1,6 @@
 package tech.alexnijjar.extractinator.common.registry;
 
-import com.teamresourceful.resourcefullib.common.item.tabs.ResourcefulCreativeTab;
+import com.teamresourceful.resourcefullib.common.item.tabs.ResourcefulCreativeModeTab;
 import com.teamresourceful.resourcefullib.common.registry.RegistryEntry;
 import com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistries;
 import com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistry;
@@ -12,12 +12,10 @@ import net.minecraft.world.item.Item;
 import tech.alexnijjar.extractinator.Extractinator;
 import tech.alexnijjar.extractinator.common.block.ExtractinatorBlockItem;
 
-import java.util.function.Supplier;
-
 @SuppressWarnings("unused")
 public class ModItems {
     public static final ResourcefulRegistry<Item> ITEMS = ResourcefulRegistries.create(BuiltInRegistries.ITEM, Extractinator.MOD_ID);
-    public static final Supplier<CreativeModeTab> TAB = new ResourcefulCreativeTab(ResourceLocation.fromNamespaceAndPath(Extractinator.MOD_ID, "main"))
+    public static final CreativeModeTab TAB = new ResourcefulCreativeModeTab(ResourceLocation.fromNamespaceAndPath(Extractinator.MOD_ID, "main"))
         .setItemIcon(ModBlocks.EXTRACTINATOR)
         .addRegistry(ITEMS)
         .build();

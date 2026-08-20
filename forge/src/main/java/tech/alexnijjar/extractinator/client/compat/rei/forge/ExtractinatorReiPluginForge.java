@@ -1,4 +1,4 @@
-package tech.alexnijjar.extractinator.client.compat.rei.forge;
+package tech.alexnijjar.extractinator.client.compat.rei.neoforge;
 
 import me.shedaniel.rei.forge.REIPluginClient;
 import tech.alexnijjar.extractinator.common.compat.rei.ExtractinatorReiPlugin;
