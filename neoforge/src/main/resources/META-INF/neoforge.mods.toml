@@ -1,16 +1,16 @@
 modLoader = "javafml"
 loaderVersion = "[4,)"
 license = "MIT"
-issueTrackerURL = "https://github.com/alexnijjar/extractinator/issues"
+issueTrackerURL = "https://github.com/moshang-ca/Extractinator/issues"
 
 [[mods]]
 modId = "extractinator"
 version = "${version}"
-displayName = "Extractinator"
-displayURL = "https://modrinth.com/mod/extractinator"
+displayName = "Extractinator Forked"
+# displayURL = "https://modrinth.com/mod/extractinator"
 logoFile = "icon.png"
-authors = "Alex Nijjar"
-credits = "Kekie6"
+authors = "Alex Nijjar, Moshang"
+credits = "Alex Nijjar, Kekie6"
 description = "Convert blocks into resources."
 
 [[mixins]]
@@ -23,11 +23,10 @@ versionRange = "[21,)"
 ordering = "NONE"
 side = "BOTH"
 
-# Minecraft 依赖
 [[dependencies.extractinator]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.21,)"
+versionRange = "[1.21, 1.21.2)"
 ordering = "NONE"
 side = "BOTH"
 

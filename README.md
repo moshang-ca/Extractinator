@@ -15,51 +15,36 @@ into valuable resources. It's based on Terraria's [Silt Extractinator](https://t
 incorporating silt and slush ore, along with some
 new features, such as full automation, support for additional blocks and extensive support for other mods.
 
-## Default Recipe 
+> **Notice:** This repository is a **port / maintained fork** of the original
+> [Extractinator](https://github.com/alexnijjar/Extractinator) by [Alex Nijjar](https://github.com/alexnijjar),
+> updated to **Minecraft 1.21.1** for **NeoForge and Fabric**. All original code and assets belong to Alex Nijjar
+> and the contributors. This port is maintained by [Moshang](https://github.com/moshang-ca) and is **not affiliated**
+> with the original author.
+
+## Supported Versions
+
+- Minecraft **1.21.1**
+- NeoForge (>= 21.1)
+- Fabric
+
+## Dependencies
+
+- [Resourceful Lib](https://modrinth.com/mod/resourceful-lib) `>= 3.0.12`
+- [Resourceful Config](https://modrinth.com/mod/resourceful-config) `>= 3.0.11`
+
+## Default Recipe
 
 ![Recipe](https://i.imgur.com/cx5XuCZ.png)
 
-## Developers
+## Building from Source
 
-To add this library to your project, do the following:
+This is an [Architectury](https://docs.architectury.dev/) multi-loader project with `common`, `fabric` and `neoforge`
+modules. Requires **JDK 21**.
 
-```groovy
-repositories {
-  maven {
-    // Location of the maven that hosts Alex's and Team Resourceful's files.
-    name = "Team Resourceful Maven"
-    url = "https://maven.resourcefulbees.com/repository/maven-public/"
-  }
-}
+```bash
+./gradlew :fabric:build    # Fabric jar
+./gradlew :neoforge:build  # NeoForge jar
+./gradlew build            # everything
 ```
 
-In an Architectury project, you would implement it like so:
-
-Common
-
-```groovy
-dependencies {
-    modImplementation "tech.alexnijjar.extractinator:extractinator-common-$rootProject.minecraft_version:$rootProject.extractinator_version"
-}
-```
-
-Fabric
-
-```groovy
-dependencies {
-    modImplementation "tech.alexnijjar.extractinator:extractinator-fabric-$rootProject.minecraft_version:$rootProject.extractinator_version"
-}
-```
-
-Forge
-
-```groovy
-dependencies {
-    modImplementation "tech.alexnijjar.extractinator:extractinator-forge-$rootProject.minecraft_version:$rootProject.extractinator_version"
-}
-```
-
----
-
-<div align="center">
-</div>
+Output jars are located in `fabric/build/libs/` and `neoforge/build/libs/`.

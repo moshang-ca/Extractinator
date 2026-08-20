@@ -24,7 +24,7 @@ dependencies {
     common(project(":common", configuration = "namedElements")) {
         isTransitive = false
     }
-    shadowCommon(project(path = ":common", configuration = "transformProductionForge")) {
+    shadowCommon(project(path = ":common", configuration = "transformProductionNeoForge")) {
         isTransitive = false
     }
 

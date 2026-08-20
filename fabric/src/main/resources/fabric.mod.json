@@ -2,18 +2,20 @@
   "schemaVersion": 1,
   "id": "extractinator",
   "version": "${version}",
-  "name": "Extractinator",
+  "name": "Extractinator Forked",
   "description": "Convert blocks into resources.",
   "authors": [
-    "Alex Nijjar"
+    "Alex Nijjar",
+    "Moshang"
   ],
   "contributors": [
+    "Alex Nijjar",
     "Kekie6"
   ],
   "contact": {
-    "website": "https://modrinth.com/mod/extractinator",
-    "repo": "https://github.com/alexnijjar/extractinator",
-    "issues": "https://github.com/alexnijjar/extractinator/issues"
+    "website": "",
+    "repo": "https://github.com/moshang-ca/Extractinator",
+    "issues": "https://github.com/moshang-ca/Extractinator/issues"
   },
   "license": "MIT",
   "icon": "icon.png",
@@ -37,8 +39,8 @@
   },
   "depends": {
     "fabric": "*",
-    "minecraft": ">=1.20",
-    "resourcefullib": ">=2.1.16",
-    "resourcefulconfig": ">=2.1.0"
+    "minecraft": ">=1.21 <=1.21.1",
+    "resourcefullib": ">=3.0.12",
+    "resourcefulconfig": ">=3.0.11"
   }
 }

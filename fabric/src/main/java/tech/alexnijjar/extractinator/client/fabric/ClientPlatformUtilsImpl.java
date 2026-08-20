@@ -1,7 +1,6 @@
 package tech.alexnijjar.extractinator.client.fabric;
 
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.model.BakedModelManagerHelper;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
@@ -16,7 +15,7 @@ public class ClientPlatformUtilsImpl {
     }
 
     public static BakedModel getModel(ModelManager dispatcher, ResourceLocation id) {
-        return BakedModelManagerHelper.getModel(dispatcher, id);
+        return dispatcher.getModel(id);
     }
 
 }

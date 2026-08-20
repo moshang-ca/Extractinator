@@ -42,6 +42,7 @@ subprojects {
         maven(url = "https://maven.architectury.dev/")
         maven(url = "https://maven.resourcefulbees.com/repository/maven-public/")
         maven(url = "https://neoforged.forgecdn.net/releases/")
+        maven(url = "https://maven.blamejared.com/")
     }
 
     dependencies {
@@ -91,7 +92,7 @@ subprojects {
 
     tasks.processResources {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        filesMatching(listOf("META-INF/neoforge.mods.toml")) {
+        filesMatching(listOf("META-INF/neoforge.mods.toml", "fabric.mod.json")) {
             expand("version" to project.version)
         }
     }

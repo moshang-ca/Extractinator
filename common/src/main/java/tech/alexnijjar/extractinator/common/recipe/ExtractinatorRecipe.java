@@ -25,8 +25,7 @@ import tech.alexnijjar.extractinator.common.registry.ModRecipeTypes;
 
 import java.util.List;
 
-public record ExtractinatorRecipe(Ingredient input,
-                                  List<Drop> outputs) implements CodecRecipe<SingleRecipeInput> {
+public record ExtractinatorRecipe(Ingredient input, List<Drop> outputs) implements CodecRecipe<SingleRecipeInput> {
 
     public static MapCodec<ExtractinatorRecipe> CODEC =
         RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -43,7 +42,7 @@ public record ExtractinatorRecipe(Ingredient input,
 
     @Override
     public boolean matches(SingleRecipeInput input, Level level) {
-        return false;
+        return this.input.test(input.item());
     }
 
     public boolean matches(ItemStack stack, Level level) { return matches(new SingleRecipeInput(stack), level); }

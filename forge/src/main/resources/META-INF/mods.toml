@@ -6,7 +6,7 @@ issueTrackerURL = "https://github.com/alexnijjar/extractinator/issues"
 [[mods]]
 modId = "extractinator"
 version = "${version}"
-displayName = "Extractinator"
+displayName = "Extractinator Forked"
 displayURL = "https://modrinth.com/mod/extractinator"
 logoFile = "icon.png"
 authors = "Alex Nijjar"
