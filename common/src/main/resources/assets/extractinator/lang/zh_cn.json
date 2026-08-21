@@ -5,6 +5,8 @@
   "block.extractinator.slush": "雪泥",
   "emi.category.extractinator.extractinator": "矿石提取机",
   "text.extractinator.drop_chance": "掉落概率：%s%%",
+  "text.extractinator.max_drop_count": "最大掉落数量: %s%%",
+  "text.extractinator.min_drop_count": "最小掉落数量: %s%%",
   "text.resourcefulconfig.extractinator.option.extractTicks": "提取时间（刻）",
   "text.resourcefulconfig.extractinator.option.extractTicks.tooltip": "矿石提取机提取一个方块花费的时间",
   "text.resourcefulconfig.extractinator.option.extractinatorDurability": "矿石提取机耐久",

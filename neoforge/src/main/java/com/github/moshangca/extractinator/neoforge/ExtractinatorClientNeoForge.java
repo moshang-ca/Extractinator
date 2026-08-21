@@ -1,6 +1,6 @@
 package com.github.moshangca.extractinator.neoforge;
 
-import com.github.moshangca.extractinator.common.config.neoforge.NeoForgeMenuConfig;
+import tech.alexnijjar.extractinator.common.config.neoforge.NeoForgeMenuConfig;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.world.item.Item;

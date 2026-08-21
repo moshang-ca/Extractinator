@@ -4,8 +4,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
@@ -32,6 +34,8 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
     private ExtractinatorRecipe recipe;
     private ItemStack prevInput = ItemStack.EMPTY;
 
+    protected BlockPos containerRefer;
+
     public ExtractinatorBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(ModBlockEntityTypes.EXTRACTINATOR.get(), blockPos, blockState);
         inventory = NonNullList.withSize(33, ItemStack.EMPTY);
@@ -44,12 +48,38 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
     }
 
     protected void extractinate() {
+        extractedFromContainer();
+
         if (this.level != null) {
             dispenseItems();
             placeBlockAbove();
             extractBlockAbove();
             extractItems();
             setChanged();
+        }
+    }
+
+    protected void extractedFromContainer() {
+        if (level == null) return;
+
+        if (containerRefer != null && level.getBlockEntity(containerRefer) instanceof Container container) {
+            for (int i = 0; i < container.getContainerSize(); ++i) {
+                ItemStack pendingInput = container.getItem(i);
+                if (isValidInput(pendingInput)) {
+                    addItemToInput(pendingInput);
+                    break;
+                }
+            }
+        }
+        else {
+            BlockPos selfPosition = getBlockPos();
+            for (var dir : ModUtils.DIRECTIONS) {
+                if (level.getBlockEntity(selfPosition.relative(dir)) instanceof Container) {
+                    containerRefer = selfPosition.relative(dir);
+                    return;
+                }
+            }
+            containerRefer = null;
         }
     }
 
@@ -136,6 +166,10 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
         super.saveAdditional(tag, registries);
         ContainerHelper.saveAllItems(tag, this.inventory, registries);
         tag.putInt("RemainingUsages", remainingUsages);
+
+        if (containerRefer != null)
+            tag.put("NearingContainer", BlockPos.CODEC.encodeStart(NbtOps.INSTANCE, this.containerRefer).getOrThrow());
+
     }
 
     @Override
@@ -143,6 +177,10 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
         super.loadAdditional(tag, registries);
         ContainerHelper.loadAllItems(tag, this.inventory, registries);
         this.remainingUsages = tag.getInt("RemainingUsages");
+
+        var pos = tag.get("NearingContainer");
+        if (pos != null)
+            this.containerRefer = BlockPos.CODEC.parse(NbtOps.INSTANCE, pos).getOrThrow();
     }
 
     @Override

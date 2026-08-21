@@ -23,4 +23,5 @@ public record ExtractinatorDisplay(ExtractinatorRecipe recipe) implements Displa
     public CategoryIdentifier<?> getCategoryIdentifier() {
         return ExtractinatorReiPlugin.CATEGORY;
     }
+
 }

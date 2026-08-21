@@ -1,5 +1,6 @@
 package tech.alexnijjar.extractinator.common.util;
 
+import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModUtils {
+    public static final List<Direction> DIRECTIONS = Direction.stream().toList();
 
     public static List<ItemStack> extractItem(ExtractinatorRecipe recipe, Level level) {
         if (recipe == null) return List.of();

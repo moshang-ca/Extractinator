@@ -16,9 +16,9 @@ import tech.alexnijjar.extractinator.Extractinator;
     // gradient = @ConfigInfo.Gradient(value = "45deg", first = "#c2e59c", second = "#64b3f4"),
 
     links = {
-        @ConfigInfo.Link(value = "https://github.com/alexnijjar/Extractinator", icon = "github", text = "GitHub"),
-        @ConfigInfo.Link(value = "https://www.curseforge.com/minecraft/mc-mods/extractinator", icon = "curseforge", text = "CurseForge"),
-        @ConfigInfo.Link(value = "https://modrinth.com/mod/extractinator", icon = "modrinth", text = "Modrinth"),
+        @ConfigInfo.Link(value = "https://github.com/moshang-ca/Extractinator", icon = "github", text = "GitHub"),
+        // @ConfigInfo.Link(value = "https://www.curseforge.com/minecraft/mc-mods/extractinator", icon = "curseforge", text = "CurseForge"),
+        // @ConfigInfo.Link(value = "https://modrinth.com/mod/extractinator", icon = "modrinth", text = "Modrinth"),
     }
 )
 public final class ExtractinatorConfig {
