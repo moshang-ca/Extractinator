@@ -52,9 +52,10 @@ public class ExtractinatorBlock extends BaseEntityBlock implements SimpleWaterlo
                                               Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!level.isClientSide()) {
             if (level.getBlockEntity(pos) instanceof ExtractinatorBlockEntity extractinator) {
-                extractinator.addItemToInput(player.getItemInHand(hand));
-                extractinator.extractinate();
-                return ItemInteractionResult.SUCCESS;
+                if (!extractinator.addItemToInput(player.getItemInHand(hand), false).isEmpty()) {
+                    extractinator.extractinate();
+                    return ItemInteractionResult.SUCCESS;
+                }
             }
         }
         return ItemInteractionResult.CONSUME;

@@ -60,13 +60,12 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
     }
 
     protected void extractedFromContainer() {
-        if (level == null) return;
-
+        assert level != null;
         if (containerRefer != null && level.getBlockEntity(containerRefer) instanceof Container container) {
             for (int i = 0; i < container.getContainerSize(); ++i) {
                 ItemStack pendingInput = container.getItem(i);
                 if (isValidInput(pendingInput)) {
-                    addItemToInput(pendingInput);
+                    addItemToInput(pendingInput, false);
                     break;
                 }
             }
@@ -74,7 +73,8 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
         else {
             BlockPos selfPosition = getBlockPos();
             for (var dir : ModUtils.DIRECTIONS) {
-                if (level.getBlockEntity(selfPosition.relative(dir)) instanceof Container) {
+                if (ModUtils.isExtractableContainer(level, selfPosition.relative(dir))) {
+                    System.out.println(selfPosition.relative(dir));
                     containerRefer = selfPosition.relative(dir);
                     return;
                 }
@@ -84,8 +84,7 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
     }
 
     protected void placeBlockAbove() {
-        if (level == null) return;
-
+        assert level != null;
         BlockState above = level.getBlockState(this.getBlockPos().above());
         ItemStack input = inventory.getFirst();
         BlockState toPlaceState = Block.byItem(input.getItem()).defaultBlockState();
@@ -106,8 +105,7 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
     }
 
     protected void extractBlockAbove() {
-        if (level == null) return;
-
+        assert level != null;
         BlockState above = level.getBlockState(this.getBlockPos().above());
         if (above.isAir()) return;
         extractStack(above.getBlock().asItem().getDefaultInstance());
@@ -120,7 +118,8 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
     }
 
     protected boolean extractStack(ItemStack stack) {
-        if (level == null || !isValidInput(stack)) return false;
+        assert level != null;
+        if (!isValidInput(stack)) return false;
 
         if (ExtractinatorConfig.silent) {
             level.removeBlock(this.getBlockPos().above(), false);
@@ -134,12 +133,15 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
     }
 
     protected void dispenseItems() {
-        if (level == null) return;
-
+        assert level != null;
         for (int i = 1; i < getInventory().size(); i++) {
             ItemStack stack = getItem(i);
             if (stack.isEmpty()) continue;
-            if (!level.getBlockState(getBlockPos().above()).isAir()) continue;
+            if (!level.getBlockState(getBlockPos().above()).isAir()) {
+                ModUtils.outputToContainer(level, getBlockPos().above(), stack);
+                System.out.println(stack);
+                continue;
+            }
             BlockPos pos = this.getBlockPos();
             ItemEntity itemEntity = new ItemEntity(level, pos.getX() + 0.5f, pos.getY() + 2.0f, pos.getZ() + 0.5f, stack.copy());
             itemEntity.setDeltaMovement(itemEntity.getDeltaMovement().scale(1.5f));
@@ -150,13 +152,12 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
     }
 
     public void damage() {
-        if (this.level != null) {
-            if (ExtractinatorConfig.extractinatorDurability > 0) {
-                this.remainingUsages--;
-                if (this.remainingUsages == 0) {
-                    level.playSound(null, this.getBlockPos(), SoundEvents.ANVIL_DESTROY, SoundSource.BLOCKS, 1, 1);
-                    level.destroyBlock(this.getBlockPos(), false);
-                }
+        assert level != null;
+        if (ExtractinatorConfig.extractinatorDurability > 0) {
+            this.remainingUsages--;
+            if (this.remainingUsages == 0) {
+                level.playSound(null, this.getBlockPos(), SoundEvents.ANVIL_DESTROY, SoundSource.BLOCKS, 1, 1);
+                level.destroyBlock(this.getBlockPos(), false);
             }
         }
     }
@@ -191,7 +192,8 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
 
     @Override
     public boolean isValidInput(ItemStack stack) {
-        if (level == null || stack.isEmpty()) return false;
+        assert level != null;
+        if (stack.isEmpty()) return false;
         if (!ItemStack.isSameItem(this.prevInput, stack)) {
             RecipeHolder<ExtractinatorRecipe> holderResult = level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.EXTRACTINATOR_RECIPE.get()).stream().filter(holder -> holder.value().matches(stack, level)).findFirst().orElse(null);
             this.recipe = holderResult != null ? holderResult.value() : null;

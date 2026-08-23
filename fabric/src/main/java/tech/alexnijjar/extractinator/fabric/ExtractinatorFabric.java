@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -12,7 +13,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import tech.alexnijjar.extractinator.Extractinator;
 import tech.alexnijjar.extractinator.common.config.ExtractinatorConfig;
+import tech.alexnijjar.extractinator.common.registry.ModBlockEntityTypes;
 import tech.alexnijjar.extractinator.common.registry.ModItems;
+import tech.alexnijjar.extractinator.fabric.storage.ExtractinatorItemStorage;
 
 public class ExtractinatorFabric implements ModInitializer {
     @Override
@@ -24,6 +27,11 @@ public class ExtractinatorFabric implements ModInitializer {
 
     public static void addExtraRegistries() {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, ModItems.TAB.id, ModItems.TAB.build());
+
+        ItemStorage.SIDED.registerForBlockEntity(
+            (be, direction) -> new ExtractinatorItemStorage(be),
+            ModBlockEntityTypes.EXTRACTINATOR.get()
+        );
     }
 
     public static void addBiomeModifications() {

@@ -1,4 +1,4 @@
-package tech.alexnijjar.extractinator.common.config.neoforge;
+package com.github.moshangca.extractinator.config;
 
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.client.ConfigScreen;

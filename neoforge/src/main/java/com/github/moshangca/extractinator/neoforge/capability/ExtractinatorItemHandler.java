@@ -1,4 +1,4 @@
-package com.github.moshangca.extractinator.neoforge.registry;
+package com.github.moshangca.extractinator.neoforge.capability;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.ItemStack;
@@ -28,17 +28,12 @@ public class ExtractinatorItemHandler implements IItemHandler {
     @Override
     public ItemStack insertItem(int i, @NotNull ItemStack arg, boolean bl) {
         if (i != 0) return ItemStack.EMPTY;
-        be.addItemToInput(arg);
-        return arg;
+        return be.addItemToInput(arg, bl);
     }
 
     @Override
     public ItemStack extractItem(int i, int j, boolean bl) {
-        if (i == 0) return ItemStack.EMPTY;
-        if (bl) {
-            
-        }
-        return be.getItem(i);
+        return be.extractItem(i, j, bl);
     }
 
     @Override

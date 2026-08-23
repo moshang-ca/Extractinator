@@ -1,18 +1,17 @@
-## 3.0.0-alpha.1 (Minecraft 1.21.1)
+## 3.1.0-alpha.1 (Minecraft 1.21.1)
+English/[中文](changelog.zh.md)
 
-This is a port of [Extractinator](https://github.com/alexnijjar/Extractinator) by **Alex Nijjar** to Minecraft **1.21.1** (NeoForge & Fabric), maintained by Moshang.
+### Added
+- Automatic item extraction from adjacent containers (chests, etc.) — the extractinator will pull valid items from a nearby container and process them.
+- Output items are now pushed into the container above the extractinator if present; otherwise dropped as item entities.
+- Platform-specific container integration: Fabric uses `ItemStorage`, NeoForge uses `Capabilities.ItemHandler`.
+- Improved input insertion logic supports stacking and simulation.
 
-### Port changes
+### Changed
+- `addItemToInput` now returns the remaining items instead of modifying the original stack directly.
+- Container position is persisted and automatically reconnected.
+- Replaced `level == null` checks with `assert` for cleaner code.
+- JEI tooltips now display drop chance, minimum and maximum drop counts per output (if JEI is installed).
 
-- Ported from Forge to **NeoForge** (Fabric support retained)
-- Updated to Minecraft **1.21.1**
-- Updated dependencies: Resourceful Lib 3.0.12, Resourceful Config 3.0.11
-- Upgraded build tooling: Architectury Loom 1.17.491, Architectury Plugin 3.5, Shadow 8.3.8, Gradle 9.5
-- Added Parchment mappings (2024.11.17)
-
-### Upstream 3.0.0-alpha.1 changes
-
-- Fix REI compat not registered on Forge
-- Add silent config (#40)
-- Allow extractinator to process non-blocks (#41)
-- [Fabric] Add option to disable silt and slush ore (#38)
+### Fixed
+- Proper handling of item insertion when the input slot is full.

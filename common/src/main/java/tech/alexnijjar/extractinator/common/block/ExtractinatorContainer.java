@@ -25,27 +25,31 @@ public interface ExtractinatorContainer extends WorldlyContainer {
         return result;
     }
 
-    @Deprecated
-    @SuppressWarnings("DeprecatedIsStillUsed")
-    default ItemStack addItemToInput(ItemStack stack) {
-        return addItemToInput(stack, false);
-    }
-
     default ItemStack addItemToInput(ItemStack stack, boolean simulate) {
         if (isValidInput(stack)) {
             ItemStack input = getItem(0);
-            if (simulate) {
-                if (ItemStack.isSameItem(stack, input)) {
-                    int remain = input.getCount() + stack.getCount() - input.getMaxStackSize();
-                    if (remain > 0) return new ItemStack(stack.getItem(), remain);
+            ItemStack toReturn = stack.copy();
+            if (ItemStack.isSameItem(stack, input)) {
+                int space = Math.max(0, input.getMaxStackSize() - input.getCount());
+                if (space == 0) return ItemStack.EMPTY;
+
+                int inserted = Math.min(space, stack.getCount());
+                toReturn.shrink(inserted);
+
+                if (!simulate) {
+                    input.grow(inserted);
+                    stack.shrink(inserted);
                 }
-                return ItemStack.EMPTY;
+            } else if (input.isEmpty()) {
+                if (!simulate) {
+                    setItem(0, stack.copy());
+                    stack.setCount(0);
+                }
+                toReturn = ItemStack.EMPTY;
             }
-            if (input.isEmpty() || ItemStack.isSameItem(stack, input)) {
-                getInventory().set(0, new ItemStack(stack.getItem(), input.getCount() + 1));
-                stack.shrink(1);
-            }
+            return toReturn;
         }
+        return ItemStack.EMPTY;
     }
 
     default ItemStack addItem(ItemStack stack) {
@@ -57,6 +61,27 @@ public interface ExtractinatorContainer extends WorldlyContainer {
             this.moveItemToEmptySlots(itemStack);
             return itemStack.isEmpty() ? ItemStack.EMPTY : itemStack;
         }
+    }
+
+    default ItemStack extractItem(int slot, int amount, boolean simulate) {
+        if (slot == 0) return ItemStack.EMPTY;
+
+        ItemStack stack = getItem(slot);
+        int extracted = Math.min(amount, stack.getCount());
+        ItemStack toReturn = stack.copyWithCount(extracted);
+        if (!simulate) {
+            removeItem(slot, extracted);
+        }
+        return toReturn;
+    }
+
+    default ItemStack extractItem(ItemStack stack, boolean simulate) {
+        for (int i = 1; i < getContainerSize(); ++i) {
+            if (getItem(i).is(stack.getItem())) {
+                return extractItem(i, stack.getCount(), simulate);
+            }
+        }
+        return ItemStack.EMPTY;
     }
 
     private void moveItemToOccupiedSlotsWithSameType(ItemStack stack) {

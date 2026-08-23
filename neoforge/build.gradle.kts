@@ -20,6 +20,10 @@ val common: Configuration by configurations.creating {
     configurations["developmentNeoForge"].extendsFrom(this)
 }
 
+repositories {
+    maven(url = "https://api.modrinth.com/maven")
+}
+
 dependencies {
     common(project(":common", configuration = "namedElements")) {
         isTransitive = false
@@ -37,4 +41,6 @@ dependencies {
     modCompileOnly(group = "me.shedaniel", name = "RoughlyEnoughItems-api-neoforge", version = reiVersion)
     modLocalRuntime(group = "me.shedaniel", name = "RoughlyEnoughItems-neoforge", version = reiVersion)
     modCompileOnly(group = "me.shedaniel", name = "RoughlyEnoughItems-default-plugin", version = reiVersion)
+    modLocalRuntime("maven.modrinth:nvQzSEkH:eYz2YBGT")     // Jade
+
 }

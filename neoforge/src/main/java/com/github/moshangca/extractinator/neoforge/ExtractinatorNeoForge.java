@@ -1,6 +1,6 @@
 package com.github.moshangca.extractinator.neoforge;
 
-import com.github.moshangca.extractinator.neoforge.registry.ExtractinatorItemHandler;
+import com.github.moshangca.extractinator.neoforge.capability.ExtractinatorItemHandler;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -11,11 +11,9 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import tech.alexnijjar.extractinator.Extractinator;
 import tech.alexnijjar.extractinator.client.ExtractinatorClient;
-import tech.alexnijjar.extractinator.common.block.ExtractinatorBlockEntity;
 import tech.alexnijjar.extractinator.common.registry.ModBlockEntityTypes;
 import tech.alexnijjar.extractinator.common.registry.ModItems;
 
