@@ -25,9 +25,22 @@ public interface ExtractinatorContainer extends WorldlyContainer {
         return result;
     }
 
-    default void addItemToInput(ItemStack stack) {
+    @Deprecated
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    default ItemStack addItemToInput(ItemStack stack) {
+        return addItemToInput(stack, false);
+    }
+
+    default ItemStack addItemToInput(ItemStack stack, boolean simulate) {
         if (isValidInput(stack)) {
             ItemStack input = getItem(0);
+            if (simulate) {
+                if (ItemStack.isSameItem(stack, input)) {
+                    int remain = input.getCount() + stack.getCount() - input.getMaxStackSize();
+                    if (remain > 0) return new ItemStack(stack.getItem(), remain);
+                }
+                return ItemStack.EMPTY;
+            }
             if (input.isEmpty() || ItemStack.isSameItem(stack, input)) {
                 getInventory().set(0, new ItemStack(stack.getItem(), input.getCount() + 1));
                 stack.shrink(1);

@@ -1,5 +1,6 @@
 package com.github.moshangca.extractinator.neoforge;
 
+import com.github.moshangca.extractinator.neoforge.registry.ExtractinatorItemHandler;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -8,9 +9,14 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import tech.alexnijjar.extractinator.Extractinator;
 import tech.alexnijjar.extractinator.client.ExtractinatorClient;
+import tech.alexnijjar.extractinator.common.block.ExtractinatorBlockEntity;
+import tech.alexnijjar.extractinator.common.registry.ModBlockEntityTypes;
 import tech.alexnijjar.extractinator.common.registry.ModItems;
 
 @Mod(Extractinator.MOD_ID)
@@ -21,6 +27,7 @@ public class ExtractinatorNeoForge {
         if (dist == Dist.CLIENT)
             ExtractinatorClientNeoForge.init(mod);
 
+        bus.addListener(ExtractinatorNeoForge::OnCapabilityRegister);
         bus.addListener(ExtractinatorNeoForge::onRegister);
         bus.addListener(ExtractinatorNeoForge::onClientSetup);
     }
@@ -29,6 +36,14 @@ public class ExtractinatorNeoForge {
         if (event.getRegistryKey().equals(Registries.CREATIVE_MODE_TAB)) {
             Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, ModItems.TAB.id, ModItems.TAB.build());
         }
+    }
+
+    public static void OnCapabilityRegister(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(
+            Capabilities.ItemHandler.BLOCK,
+            ModBlockEntityTypes.EXTRACTINATOR.get(),
+            (be, side) -> new ExtractinatorItemHandler(be)
+        );
     }
 
     public static void onClientSetup(FMLClientSetupEvent event) {
