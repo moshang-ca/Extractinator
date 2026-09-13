@@ -123,40 +123,40 @@ subprojects {
         sourceSets.main.get().resources.srcDir("src/main/generated/resources")
     }
 
-    publishing {
-        publications {
-            create<MavenPublication>("maven") {
-                artifactId = "$modId-$modLoader-$minecraftVersion"
-                from(components["java"])
-
-                pom {
-                    name.set("Extractinator $modLoader")
-                    url.set("https://github.com/alexnijjar/$modId")
-
-                    scm {
-                        connection.set("git:https://github.com/alexnijjar/$modId.git")
-                        developerConnection.set("git:https://github.com/alexnijjar/$modId.git")
-                        url.set("https://github.com/alexnijjar/$modId")
-                    }
-
-                    licenses {
-                        license {
-                            name.set("ARR")
-                        }
-                    }
-                }
-            }
-        }
-        repositories {
-            maven {
-                setUrl("https://maven.resourcefulbees.com/repository/alexnijjar/")
-                credentials {
-                    username = System.getenv("MAVEN_USER")
-                    password = System.getenv("MAVEN_PASS")
-                }
-            }
-        }
-    }
+//    publishing {
+//        publications {
+//            create<MavenPublication>("maven") {
+//                artifactId = "$modId-$modLoader-$minecraftVersion"
+//                from(components["java"])
+//
+//                pom {
+//                    name.set("Extractinator $modLoader")
+//                    url.set("https://github.com/alexnijjar/$modId")
+//
+//                    scm {
+//                        connection.set("git:https://github.com/alexnijjar/$modId.git")
+//                        developerConnection.set("git:https://github.com/alexnijjar/$modId.git")
+//                        url.set("https://github.com/alexnijjar/$modId")
+//                    }
+//
+//                    licenses {
+//                        license {
+//                            name.set("ARR")
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        repositories {
+//            maven {
+//                setUrl("https://maven.resourcefulbees.com/repository/alexnijjar/")
+//                credentials {
+//                    username = System.getenv("MAVEN_USER")
+//                    password = System.getenv("MAVEN_PASS")
+//                }
+//            }
+//        }
+//    }
 }
 
 resourcefulGradle {

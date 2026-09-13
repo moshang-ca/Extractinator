@@ -2,7 +2,7 @@
 
 ## Extractinator
 
-[![Modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg)](https://modrinth.com/mod/extractinator)
+[![Modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg)]((https://modrinth.com/mod/extractinatorforked))
 <hr>
 
 ### 📖About 📖
@@ -11,7 +11,7 @@
 </div>
 
 This mod adds a new machine, the Extractinator, which converts your throwaway blocks, such as gravel and cobblestone,
-into valuable resources. It's based on Terraria's [Silt Extractinator](https://terraria.fandom.com/wiki/Extractinator),
+into valuable resources. It's based on Terraria's [Extractinator](https://terraria.fandom.com/wiki/Extractinator),
 incorporating silt and slush ore, along with some
 new features, such as full automation, support for additional blocks and extensive support for other mods.
 
