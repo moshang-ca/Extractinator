@@ -72,9 +72,8 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
         }
         else {
             BlockPos selfPosition = getBlockPos();
-            for (var dir : ModUtils.DIRECTIONS) {
+            for (var dir : ModUtils.HORIZONTAL_DIRECTIONS) {
                 if (ModUtils.isExtractableContainer(level, selfPosition.relative(dir))) {
-                    System.out.println(selfPosition.relative(dir));
                     containerRefer = selfPosition.relative(dir);
                     return;
                 }
@@ -96,17 +95,20 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
             if (!ExtractinatorConfig.silent) {
                 level.playSound(null, this.getBlockPos(), toPlaceState.getSoundType().getBreakSound(), SoundSource.BLOCKS, 1.0f, 1.0f);
             }
+            if (!ModUtils.isValidInput(this.recipe, getItem(0))) return;
             List<ItemStack> outputs = ModUtils.extractItem(this.recipe, level);
             if (!outputs.isEmpty()) {
                 outputs.forEach(this::addItem);
             }
+            damage();
         }
         getItem(0).shrink(1);
     }
 
     protected void extractBlockAbove() {
         assert level != null;
-        BlockState above = level.getBlockState(this.getBlockPos().above());
+        BlockPos upper = this.getBlockPos().above();
+        BlockState above = level.getBlockState(upper);
         if (above.isAir()) return;
         extractStack(above.getBlock().asItem().getDefaultInstance());
     }
@@ -139,7 +141,6 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
             if (stack.isEmpty()) continue;
             if (!level.getBlockState(getBlockPos().above()).isAir()) {
                 ModUtils.outputToContainer(level, getBlockPos().above(), stack);
-                System.out.println(stack);
                 continue;
             }
             BlockPos pos = this.getBlockPos();
@@ -196,9 +197,10 @@ public class ExtractinatorBlockEntity extends BlockEntity implements Extractinat
         if (stack.isEmpty()) return false;
         if (!ItemStack.isSameItem(this.prevInput, stack)) {
             RecipeHolder<ExtractinatorRecipe> holderResult = level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.EXTRACTINATOR_RECIPE.get()).stream().filter(holder -> holder.value().matches(stack, level)).findFirst().orElse(null);
-            this.recipe = holderResult != null ? holderResult.value() : null;
+            if (holderResult == null) return false;
+            this.recipe = holderResult.value();
+            this.prevInput = stack.copy();
         }
-        this.prevInput = stack;
         return ModUtils.isValidInput(this.recipe, stack);
     }
 }

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModUtils {
-    public static final List<Direction> DIRECTIONS = List.of(Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
+    public static final Direction[] HORIZONTAL_DIRECTIONS = {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
 
     public static List<ItemStack> extractItem(ExtractinatorRecipe recipe, Level level) {
         if (recipe == null) return List.of();
