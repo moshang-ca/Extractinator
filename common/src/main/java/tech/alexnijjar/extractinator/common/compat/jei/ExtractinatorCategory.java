@@ -51,7 +51,7 @@ public class ExtractinatorCategory extends BaseCategory<ExtractinatorRecipe> {
                 builder.addSlot(RecipeIngredientRole.OUTPUT, i * 18 + 1, j * 18 + 21)
                     .addIngredients(ing)
                     .addRichTooltipCallback(((recipeSlotView, tooltip) -> {
-                        tooltip.add(Component.translatable("text.extractinator.drop_chance", d.dropChance()));
+                        tooltip.add(Component.translatable("text.extractinator.drop_chance", d.dropChance() * 100));
                         tooltip.add(Component.translatable("text.extractinator.max_drop_count", d.maxDropCount()));
                         tooltip.add(Component.translatable("text.extractinator.min_drop_count", d.minDropCount()));
                     }));
