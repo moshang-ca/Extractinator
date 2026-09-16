@@ -2,7 +2,7 @@
 
 ## Extractinator
 
-[![Modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg)]((https://modrinth.com/mod/extractinatorforked))
+[![Modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg)](https://modrinth.com/mod/extractinatorforked)
 <hr>
 
 ### 📖About 📖
